@@ -459,6 +459,64 @@
 
     .docs-list li { margin-bottom: 4px; }
 
+    /* NUEVO: tarjetas y botones de documentación */
+    .doc-card {
+      border-radius: 16px;
+      background: rgba(15, 23, 42, 0.98);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      padding: 12px 12px 13px;
+      margin-bottom: 12px;
+    }
+
+    .doc-card-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .doc-card-text {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .doc-buttons {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .doc-btn {
+      font-size: 12px;
+      padding: 6px 11px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: rgba(15, 23, 42, 0.95);
+      color: #e5e7eb;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.16s ease-out;
+    }
+
+    .doc-btn-primary {
+      border: none;
+      background: linear-gradient(135deg, #facc15, #f97316);
+      color: #111827;
+      box-shadow: 0 12px 30px rgba(250, 204, 21, 0.35);
+    }
+
+    .doc-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.9);
+      border-color: rgba(249, 250, 251, 0.65);
+    }
+
+    .doc-btn-primary:hover {
+      box-shadow: 0 16px 34px rgba(245, 158, 11, 0.48);
+    }
+
     .veld-card {
       border-radius: 20px;
       background: rgba(15, 23, 42, 0.95);
@@ -728,15 +786,32 @@
         </div>
 
         <div class="support-card">
+          <div class="doc-card">
+            <h3 class="doc-card-title" data-i18n="docs.eulaTitle">EULA / Términos de uso</h3>
+            <p class="doc-card-text support-item" data-i18n="docs.eulaDesc">
+              Condiciones de uso de la app, licencia de usuario final, normas de convivencia y actuación ante contenido abusivo.
+            </p>
+            <div class="doc-buttons">
+              <a href="terminos.html" class="doc-btn doc-btn-primary" data-i18n="docs.eulaEs">Abrir en español</a>
+              <a href="terms.html" class="doc-btn" data-i18n="docs.eulaEn">View in English</a>
+            </div>
+          </div>
+
+          <div class="doc-card">
+            <h3 class="doc-card-title" data-i18n="docs.privacyTitle">Política de privacidad</h3>
+            <p class="doc-card-text support-item" data-i18n="docs.privacyDesc">
+              Detalles sobre cómo tratamos tus datos, base legal, ubicación aproximada en el mapa y cómo ejercer tus derechos (RGPD).
+            </p>
+            <div class="doc-buttons">
+              <a href="privacidad.html" class="doc-btn doc-btn-primary" data-i18n="docs.privacyEs">Abrir en español</a>
+              <a href="privacy.html" class="doc-btn" data-i18n="docs.privacyEn">View in English</a>
+            </div>
+          </div>
+
+          <p class="support-item" style="margin-top:10px;" data-i18n="docs.extraIntro">
+            Otros documentos y procesos importantes:
+          </p>
           <ul class="docs-list">
-            <li data-i18n="docs.item1">
-              <strong>EULA / Términos de uso:</strong>
-              <a href="terminos.html">Consultar EULA de Españoles Por Europa</a>.
-            </li>
-            <li data-i18n="docs.item2">
-              <strong>Política de privacidad:</strong>
-              <a href="privacidad.html">Ver política de privacidad completa</a>, incluyendo tratamiento de datos, base legal y derechos de los usuarios.
-            </li>
             <li data-i18n="docs.item3">
               <strong>Política de contenido generado por usuarios (UGC):</strong>
               Descripción de mecanismos de bloqueo, reporte, moderación manual y actuación en menos de 24 horas ante contenidos abusivos.
@@ -853,13 +928,20 @@
         "support.tag3": "Revisión manual &lt; 24h",
 
         "docs.kicker": "DOCUMENTACIÓN OFICIAL",
-        "docs.title": "EULA / Términos de uso | Política de privacidad y contenido",
+        "docs.title": "Documentación para Apple App Store y Google Play",
         "docs.subtitle":
           "Esta sección reúne los documentos legales y de soporte que las plataformas de distribución (Apple App Store y Google Play) requieren para apps con contenido generado por usuarios.",
-        "docs.item1":
-          '<strong>EULA / Términos de uso:</strong> <a href="terminos.html">Consultar EULA de Españoles Por Europa</a>.',
-        "docs.item2":
-          '<strong>Política de privacidad:</strong> <a href="privacidad.html">Ver política de privacidad completa</a>, incluyendo tratamiento de datos, base legal y derechos de los usuarios.',
+        "docs.eulaTitle": "EULA / Términos de uso",
+        "docs.eulaDesc":
+          "Condiciones de uso de la app, licencia de usuario final, normas de convivencia y actuación ante contenido abusivo.",
+        "docs.eulaEs": "Abrir en español",
+        "docs.eulaEn": "View in English",
+        "docs.privacyTitle": "Política de privacidad",
+        "docs.privacyDesc":
+          "Detalles sobre cómo tratamos tus datos, base legal, ubicación aproximada en el mapa y cómo ejercer tus derechos (RGPD).",
+        "docs.privacyEs": "Abrir en español",
+        "docs.privacyEn": "View in English",
+        "docs.extraIntro": "Otros documentos y procesos importantes:",
         "docs.item3":
           "<strong>Política de contenido generado por usuarios (UGC):</strong> Descripción de mecanismos de bloqueo, reporte, moderación manual y actuación en menos de 24 horas ante contenidos abusivos.",
         "docs.item4":
@@ -946,16 +1028,22 @@
         "support.tag3": "Manual review &lt; 24h",
 
         "docs.kicker": "OFFICIAL DOCUMENTATION",
-        "docs.title":
-          ">EULA / Terms of Use | Privacy Policy",
+        "docs.title": "Documentation for Apple App Store and Google Play",
         "docs.subtitle":
           "This section gathers the legal and support documents required by distribution platforms (Apple App Store and Google Play) for apps with user-generated content.",
-        "docs.item1":
-          '<strong>EULA / Terms of Use:</strong> <a href="terminos.html">Read the Españoles Por Europa EULA</a>.',
-        "docs.item2":
-          '<strong>Privacy Policy:</strong> <a href="privacidad.html">View full privacy policy</a>, including data processing, legal basis and user rights.',
+        "docs.eulaTitle": "EULA / Terms of Use",
+        "docs.eulaDesc":
+          "App usage conditions, end-user license, community rules and how we act on abusive content.",
+        "docs.eulaEs": "View in Spanish",
+        "docs.eulaEn": "View in English",
+        "docs.privacyTitle": "Privacy Policy",
+        "docs.privacyDesc":
+          "Details on how we process your data, legal basis, approximate map location and how to exercise your rights (GDPR).",
+        "docs.privacyEs": "View in Spanish",
+        "docs.privacyEn": "View in English",
+        "docs.extraIntro": "Other important documents and processes:",
         "docs.item3":
-          "<strong>User-Generated Content (UGC) policy:</strong> Description of blocking, reporting, manual moderation and action within 24 hours in case of abusive content.",
+          "<strong>User-Generated Content (UGC) policy:</strong> description of blocking, reporting, manual moderation and action within 24 hours in case of abusive content.",
         "docs.item4":
           '<strong>Account deletion procedure:</strong> users can request account deletion by emailing <a href="mailto:soporte@veldinnetwork.com">soporte@veldinnetwork.com</a>.',
         "docs.item5":
@@ -1000,6 +1088,3 @@
   </script>
 </body>
 </html>
-
-
-
