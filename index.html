@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Españoles Por Europa (EPE) – Conecta con tu comunidad en Europa</title>
+  <meta name="description" content="Españoles Por Europa (EPE) es una app móvil que conecta a la comunidad española repartida por Europa a través de un mapa, chats privados y herramientas de apoyo mutuo.">
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-alt: #020818;
+      --card: #020617;
+      --accent: #facc15;
+      --accent-soft: rgba(250, 204, 21, 0.1);
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --border: #1f2933;
+      --danger: #ef4444;
+      --radius-lg: 18px;
+      --radius-xl: 24px;
+      --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.46);
+      --shadow-subtle: 0 8px 20px rgba(15, 23, 42, 0.8);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #0b1120, #000000 70%);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      backdrop-filter: blur(18px);
+      background: linear-gradient(
+        to bottom,
+        rgba(15, 23, 42, 0.95),
+        rgba(15, 23, 42, 0.75),
+        transparent
+      );
+      border-bottom: 1px solid rgba(30, 64, 175, 0.4);
+      z-index: 20;
+    }
+
+    .nav {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-circle {
+      width: 38px;
+      height: 38px;
+      border-radius: 999px;
+      background: conic-gradient(
+        from 0deg,
+        #dc2626 0 33%,
+        #facc15 33% 66%,
+        #dc2626 66% 100%
+      );
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.9),
+        0 12px 25px rgba(0, 0, 0, 0.7);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .logo-circle::after {
+      content: "";
+      position: absolute;
+      inset: 7px;
+      border-radius: inherit;
+      border: 2px solid rgba(15, 23, 42, 0.95);
+      background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.28), transparent 55%);
+    }
+
+    .logo-stars {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      color: #facc15;
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .logo-title {
+      font-weight: 650;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 13px;
+    }
+
+    .logo-subtitle {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge-soft {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(15, 118, 110, 0.12);
+      color: #6ee7b7;
+      border: 1px solid rgba(22, 163, 74, 0.4);
+    }
+
+    .btn-ghost {
+      padding: 7px 13px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      font-size: 12px;
+      color: var(--muted);
+      background: radial-gradient(circle at top left, rgba(148, 163, 184, 0.25), transparent 60%);
+      cursor: pointer;
+      transition: all 0.16s ease-out;
+    }
+
+    .btn-ghost:hover {
+      border-color: rgba(249, 250, 251, 0.7);
+      color: #e5e7eb;
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-subtle);
+    }
+
+    main {
+      flex: 1;
+    }
+
+    .hero {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 20px 40px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+      gap: 32px;
+      align-items: center;
+    }
+
+    @media (max-width: 840px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+        padding-top: 26px;
+      }
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      background: radial-gradient(circle at top, rgba(148, 163, 184, 0.22), rgba(15, 23, 42, 0.95));
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .pill-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.7);
+    }
+
+    .hero-title {
+      font-size: clamp(30px, 4vw, 38px);
+      line-height: 1.15;
+      font-weight: 750;
+      letter-spacing: 0.01em;
+      margin-bottom: 12px;
+    }
+
+    .hero-title span {
+      color: var(--accent);
+    }
+
+    .hero-subtitle {
+      font-size: 14px;
+      color: var(--muted);
+      max-width: 460px;
+      margin-bottom: 20px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .btn-primary {
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: none;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #facc15, #f97316);
+      color: #111827;
+      cursor: pointer;
+      box-shadow: 0 18px 45px rgba(251, 191, 36, 0.4);
+      transition: all 0.16s ease-out;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px) scale(1.01);
+      box-shadow: 0 20px 55px rgba(245, 158, 11, 0.5);
+    }
+
+    .btn-outline {
+      padding: 9px 15px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      font-size: 13px;
+      color: var(--muted);
+      background: rgba(15, 23, 42, 0.7);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.16s ease-out;
+    }
+
+    .btn-outline span.icon {
+      font-size: 14px;
+    }
+
+    .btn-outline:hover {
+      border-color: rgba(249, 250, 251, 0.7);
+      color: #e5e7eb;
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-subtle);
+    }
+
+    .hero-meta {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .hero-meta strong {
+      color: #e5e7eb;
+      font-weight: 600;
+    }
+
+    .hero-card {
+      background: radial-gradient(circle at top, #020617, #020617 55%, #020617);
+      border-radius: 28px;
+      border: 1px solid rgba(30, 64, 175, 0.9);
+      box-shadow: var(--shadow-soft);
+      padding: 18px 18px 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background: radial-gradient(circle at top, rgba(56, 189, 248, 0.16), transparent 60%);
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .phone-shell {
+      position: relative;
+      border-radius: 26px;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      background: radial-gradient(circle at top, #020617, #020617);
+      padding: 6px;
+      max-width: 260px;
+      margin: 0 auto;
+      box-shadow: 0 22px 40px rgba(0, 0, 0, 0.85);
+    }
+
+    .phone-inner {
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(15, 23, 42, 0.9);
+      background: radial-gradient(circle at top, #020617, #030712 65%, #020617);
+      height: 420px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .phone-header {
+      padding: 10px 12px 4px;
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      font-size: 9px;
+      color: var(--muted);
+    }
+
+    .pill-mini {
+      border-radius: 999px;
+      padding: 3px 8px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+    }
+
+    .phone-map {
+      flex: 1;
+      padding: 8px 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .map-box {
+      flex: 1;
+      border-radius: 14px;
+      border: 1px solid rgba(30, 64, 175, 0.8);
+      background: radial-gradient(circle at 20% 0, rgba(56, 189, 248, 0.25), transparent 55%),
+                  radial-gradient(circle at 80% 100%, rgba(147, 51, 234, 0.3), transparent 55%),
+                  #020617;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .map-marker {
+      position: absolute;
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 10px;
+      color: #f9fafb;
+      background: rgba(15, 23, 42, 0.92);
+      border: 1px solid rgba(59, 130, 246, 0.7);
+      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.95);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .map-marker span.bubble {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background: radial-gradient(circle, #facc15, #f97316);
+      font-size: 10px;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .map-marker.madrid { top: 64%; left: 36%; }
+    .map-marker.berlin { top: 24%; right: 11%; }
+    .map-marker.paris  { top: 38%; left: 30%; }
+
+    .phone-footer {
+      padding: 7px 9px 8px;
+      border-top: 1px solid rgba(15, 23, 42, 0.9);
+      background: linear-gradient(to top, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.75));
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .footer-label {
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    .footer-label strong {
+      color: #e5e7eb;
+      font-weight: 600;
+    }
+
+    .footer-chip {
+      font-size: 10px;
+      padding: 4px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      color: #e5e7eb;
+      background: rgba(15, 23, 42, 0.8);
+    }
+
+    .section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 6px 20px 30px;
+    }
+
+    .section-header {
+      margin-bottom: 16px;
+    }
+
+    .section-kicker {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 650;
+      margin-bottom: 4px;
+    }
+
+    .section-subtitle {
+      font-size: 13px;
+      color: var(--muted);
+      max-width: 540px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    @media (max-width: 820px) {
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .card {
+      border-radius: var(--radius-lg);
+      background: rgba(15, 23, 42, 0.92);
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      padding: 14px 13px 14px;
+      box-shadow: 0 16px 35px rgba(15, 23, 42, 0.9);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background: radial-gradient(circle at top left, rgba(251, 191, 36, 0.18), transparent 60%);
+      opacity: 0;
+      transition: opacity 0.2s ease-out;
+      pointer-events: none;
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    .card-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 9px;
+      background: rgba(251, 191, 36, 0.13);
+      border: 1px solid rgba(250, 204, 21, 0.75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+
+    .card-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .card-text {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .support-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 18px;
+    }
+
+    @media (max-width: 840px) {
+      .support-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .support-card {
+      border-radius: var(--radius-xl);
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(30, 64, 175, 0.8);
+      padding: 16px 15px 18px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .support-item {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .support-item strong {
+      color: #e5e7eb;
+      font-weight: 600;
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .tag {
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      color: var(--muted);
+    }
+
+    .urgent-box {
+      margin-top: 10px;
+      padding: 10px 11px;
+      border-radius: 12px;
+      background: rgba(127, 29, 29, 0.85);
+      border: 1px solid rgba(239, 68, 68, 0.9);
+      font-size: 12px;
+      color: #fee2e2;
+    }
+
+    .urgent-box strong {
+      color: #fecaca;
+      font-weight: 600;
+    }
+
+    footer {
+      border-top: 1px solid rgba(31, 41, 55, 0.9);
+      margin-top: 12px;
+      padding: 14px 20px 16px;
+      font-size: 11px;
+      color: var(--muted);
+      background: radial-gradient(circle at top, #020617, #020617 60%, #000000);
+    }
+
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .footer-link {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .footer-link:hover {
+      color: #e5e7eb;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="nav">
+        <div class="nav-left">
+          <div class="logo-circle">
+            <div class="logo-stars">★</div>
+          </div>
+          <div class="logo-text">
+            <div class="logo-title">ESPAÑOLES POR EUROPA</div>
+            <div class="logo-subtitle">Comunidad • Mapa • Conexiones</div>
+          </div>
+        </div>
+        <div class="nav-actions">
+          <div class="badge-soft">Beta privada • 2025</div>
+          <a href="#soporte" class="btn-ghost">Soporte</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- HERO -->
+      <section class="hero">
+        <div>
+          <div class="pill">
+            <span class="pill-dot"></span>
+            <span>Una app para no sentirte solo viviendo en otro país</span>
+          </div>
+          <h1 class="hero-title">
+            Conecta con españoles por Europa, <span>sin perder tu hogar.</span>
+          </h1>
+          <p class="hero-subtitle">
+            Españoles Por Europa (EPE) es una app móvil que conecta a la comunidad española repartida por Europa. Descubre quién hay cerca, abre chats privados y construye una red de apoyo cuando más lo necesitas.
+          </p>
+
+          <div class="hero-actions">
+            <a href="https://play.google.com" class="btn-primary">
+              Descargar en Google Play
+            </a>
+            <button class="btn-outline" type="button">
+              <span class="icon"></span>
+              Próximamente en App Store
+            </button>
+          </div>
+          <div class="hero-meta">
+            <strong>Segura y moderada.</strong> Contenido generado por usuarios con
+            herramientas de bloqueo, reporte y revisión manual.
+          </div>
+        </div>
+
+        <div>
+          <div class="hero-card">
+            <div class="phone-shell">
+              <div class="phone-inner">
+                <div class="phone-header">
+                  <div class="pill-mini">Mapa de españoles</div>
+                  <div class="pill-mini">Chats privados</div>
+                </div>
+                <div class="phone-map">
+                  <div class="map-box">
+                    <div class="map-marker madrid">
+                      <span class="bubble">+18</span> Madrid
+                    </div>
+                    <div class="map-marker paris">
+                      <span class="bubble">+7</span> París
+                    </div>
+                    <div class="map-marker berlin">
+                      <span class="bubble">+12</span> Berlín
+                    </div>
+                  </div>
+                </div>
+                <div class="phone-footer">
+                  <div class="footer-label">
+                    <strong>Conecta</strong><br />
+                    con personas que entienden tu camino.
+                  </div>
+                  <div class="footer-chip">EPE • Comunidad Europea</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FEATURES -->
+      <section class="section" id="caracteristicas">
+        <div class="section-header">
+          <div class="section-kicker">FUNCIONES PRINCIPALES</div>
+          <h2 class="section-title">Todo lo que necesitas para no sentirte solo lejos de casa.</h2>
+          <p class="section-subtitle">
+            EPE combina un mapa de comunidad, chats privados y herramientas de seguridad para que puedas abrirte, preguntar y compartir sin miedo.
+          </p>
+        </div>
+
+        <div class="grid">
+          <article class="card">
+            <div class="card-icon">📍</div>
+            <h3 class="card-title">Mapa de españoles en Europa</h3>
+            <p class="card-text">
+              Explora la comunidad por ciudades y países, sin mostrar ubicaciones exactas de otros usuarios. Solo clústers por zona para preservar la privacidad.
+            </p>
+          </article>
+
+          <article class="card">
+            <div class="card-icon">💬</div>
+            <h3 class="card-title">Chat privado y solicitudes</h3>
+            <p class="card-text">
+              Envía solicitudes de contacto, acepta solo a quien quieras y charla en tiempo real con otros españoles que viven tu misma realidad.
+            </p>
+          </article>
+
+          <article class="card">
+            <div class="card-icon">🔔</div>
+            <h3 class="card-title">Notificaciones inteligentes</h3>
+            <p class="card-text">
+              Recibe avisos cuando tengas nuevas solicitudes, mensajes o recordatorios para mantener viva tu red de contactos.
+            </p>
+          </article>
+
+          <article class="card">
+            <div class="card-icon">🛡️</div>
+            <h3 class="card-title">Seguridad y moderación</h3>
+            <p class="card-text">
+              Tolerancia cero a contenido abusivo. Puedes bloquear usuarios, reportar comportamientos inadecuados y el equipo revisa los reportes en menos de 24 horas.
+            </p>
+          </article>
+
+          <article class="card">
+            <div class="card-icon">👤</div>
+            <h3 class="card-title">Perfiles personalizados</h3>
+            <p class="card-text">
+              Muestra quién eres, de dónde vienes y en qué país estás ahora, con campos pensados para la vida en el extranjero.
+            </p>
+          </article>
+
+          <article class="card">
+            <div class="card-icon">🌍</div>
+            <h3 class="card-title">Una comunidad que te entiende</h3>
+            <p class="card-text">
+              Comparte dudas, miedos y alegrías con personas que han pasado por lo mismo: mudanzas, papeleos, idioma, trabajo y nostalgia.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <!-- SAFETY & SUPPORT -->
+      <section class="section" id="soporte">
+        <div class="section-header">
+          <div class="section-kicker">SEGURIDAD • SOPORTE • LEGAL</div>
+          <h2 class="section-title">Soporte oficial de Españoles Por Europa</h2>
+          <p class="section-subtitle">
+            Esta página actúa como punto de soporte y referencia legal para los usuarios de la app EPE. Aquí encontrarás cómo contactar con nosotros y cómo gestionamos el contenido generado por usuarios.
+          </p>
+        </div>
+
+        <div class="support-grid">
+          <div class="support-card">
+            <h3 style="font-size:14px; font-weight:600; margin-bottom:8px;">Contacto de soporte</h3>
+            <p class="support-item">
+              <strong>Email principal:</strong>
+              <a href="mailto:soporte@veldinnetwork.com">soporte@veldinnetwork.com</a>
+            </p>
+            <p class="support-item">
+              <strong>Tiempo de respuesta:</strong> normalmente en menos de 24 horas laborables.
+            </p>
+            <p class="support-item">
+              <strong>Incidencias técnicas:</strong> problemas al iniciar sesión, fallos en la app, errores de mapa o chat.
+            </p>
+            <p class="support-item">
+              <strong>Soporte de cuenta:</strong> solicitudes de eliminación de cuenta, cambios de datos o dudas de privacidad.
+            </p>
+
+            <div class="urgent-box">
+              <strong>Contenido abusivo o inadecuado</strong><br />
+              Si detectas insultos, discriminación, acoso o cualquier comportamiento que incumpla nuestras normas, puedes
+              <strong>bloquear al usuario desde la app</strong> y
+              <strong>reportar el contenido</strong>. Nuestro equipo revisará el reporte y podrá eliminar contenido o expulsar al usuario en menos de 24 horas.
+            </div>
+          </div>
+
+          <div class="support-card" style="border-color: rgba(55, 65, 81, 0.9);">
+            <h3 style="font-size:14px; font-weight:600; margin-bottom:8px;">Normas de la comunidad</h3>
+            <p class="support-item">
+              EPE es un espacio de apoyo mutuo. No se toleran:
+            </p>
+            <ul style="margin-left:16px; margin-top:4px; font-size:12px; color:var(--muted);">
+              <li>Insultos, amenazas o acoso.</li>
+              <li>Discriminación por origen, género, religión u orientación.</li>
+              <li>Spam, estafas o promociones engañosas.</li>
+              <li>Contenido sexual explícito o violento.</li>
+            </ul>
+            <div class="tag-list">
+              <span class="tag">Tolerancia cero al abuso</span>
+              <span class="tag">Bloqueo y reporte en la app</span>
+              <span class="tag">Revisión manual &lt; 24h</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-inner">
+        <div>© 2025 Españoles Por Europa (EPE) – Veldin Network.</div>
+        <div class="footer-links">
+          <a href="/privacidad.html" class="footer-link">Política de Privacidad</a>
+          <a href="/terminos.html" class="footer-link">Términos de uso (EULA)</a>
+          <a href="#soporte" class="footer-link">Soporte</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
